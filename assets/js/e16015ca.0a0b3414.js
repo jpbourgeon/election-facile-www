@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwww_election_facile_fr=self.webpackChunkwww_election_facile_fr||[]).push([[9700],{5688:e=>{e.exports=JSON.parse('{"label":"hola","permalink":"/blog/tags/hola","allTagsPath":"/blog/tags","count":1}')}}]);
