@@ -1,0 +1,42 @@
+name: Manual deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      git-ref:
+        description: "Git Ref (Optional)"
+        required: false
+jobs:
+  www:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (Latest)
+        if: github.event.inputs.git-ref == ''
+        uses: actions/checkout@v3
+      - name: Checkout (Custom Ref)
+        if: github.event.inputs.git-ref != ''
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.git-ref }}
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: npm-
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
+      - name: Deploy to GitHub Pages
+        env:
+          USE_SSH: true
+        run: |
+          git config --global user.email "3356641+jpbourgeon@users.noreply.github.com"
+          git config --global user.name "jpbourgeon"
+          npm ci --ignore-scripts
+          npm run deploy

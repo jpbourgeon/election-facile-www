@@ -1,0 +1,28 @@
+name: Lint squash commit name
+
+on:
+  pull_request:
+    types: ["opened", "edited", "reopened", "synchronize"]
+    branches:
+      - main
+
+jobs:
+  lint-pr-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: npm-
+      - name: Setup Node
+        uses: actions/setup-node@v3.1.1
+        with:
+          node-version: 16.x
+      - name: Setup commitlint
+        run: npm ci --ignore-scripts
+      - name: Lint pull request name
+        uses: JulienKode/pull-request-name-linter-action@v0.5.0
