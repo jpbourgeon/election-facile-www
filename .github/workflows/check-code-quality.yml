@@ -22,16 +22,13 @@ jobs:
         with:
           files: ./**/*
           files_ignore: ./**/node_modules
-      - name: Setup node (conditional)
-        if: steps.changed-files.outputs.any_changed == 'true'
+      - name: Setup node
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - name: Install (conditional)
-        if: steps.changed-files.outputs.any_changed == 'true'
+      - name: Install
         working-directory: .
         run: npm ci --ignore-scripts
-      - name: Test build (conditional)
-        if: steps.changed-files.outputs.any_changed == 'true'
+      - name: Test build
         working-directory: .
         run: npm run build
