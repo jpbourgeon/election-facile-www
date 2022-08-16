@@ -18,24 +18,15 @@ jobs:
           path: ~/.npm
           key: npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: npm-
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v24.1
-        with:
-          files: ./**/*
-          files_ignore: ./**/node_modules
-      - name: Setup node (conditional)
-        if: steps.changed-files.outputs.any_changed == 'true'
+      - name: Setup node
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - name: SSH agent (conditional)
-        if: steps.changed-files.outputs.any_changed == 'true'
+      - name: SSH agent
         uses: webfactory/ssh-agent@v0.5.0
         with:
           ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
-      - name: Deploy to Github pages (conditional)
-        if: steps.changed-files.outputs.any_changed == 'true'
+      - name: Deploy to Github pages
         env:
           USE_SSH: true
         run: |
